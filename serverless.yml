@@ -1,0 +1,18 @@
+org: justinedelson
+app: pd-extract-environment-from-title
+service: pd-extract-environment-from-title
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  environment:
+    PD_API_KEY: ${param:pagerDutyAPIKey}
+
+functions:
+  extractTitle:
+    handler: handler.extractTitle
+    events:
+      - httpApi:
+          path: /
+          method: post
