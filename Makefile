@@ -2,7 +2,7 @@
 
 build:
 	export GO111MODULE=on
-	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/extractTitle extractTitle/main.go
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/extractTitleRegex extractTitleRegex/main.go
 
 clean:
 	rm -rf ./bin ./vendor

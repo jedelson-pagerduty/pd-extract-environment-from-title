@@ -15,9 +15,9 @@ package:
     - ./bin/**
 
 functions:
-  extractTitle:
-    handler: bin/extractTitle
+  extractTitleRegex:
+    handler: bin/extractTitleRegex
     events:
       - httpApi:
-          path: /
+          path: /regex
           method: post
