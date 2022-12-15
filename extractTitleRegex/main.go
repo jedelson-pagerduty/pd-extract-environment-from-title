@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -16,7 +17,8 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	token := os.Getenv("PD_API_KEY")
 	c := helpers.Client{Token: token}
 
-	rex := regexp.MustCompile(".*in (\\w+) (in|\\[)")
+	regexes := os.Getenv("EXTRACT_REGEXES")
+	regexSlice := strings.Split(regexes, ",")
 
 	payload := helpers.WebhookEventPayload{}
 
@@ -31,30 +33,35 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 		return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 400}, nil
 	}
 
-	match := rex.FindStringSubmatch(payload.Event.Data.Title)
-	if match == nil {
-		log.Printf("Title did not match regex: %s", payload.Event.Data.Title)
+	for _, regexStr := range regexSlice {
+		rex := regexp.MustCompile(regexStr)
+		match := rex.FindStringSubmatch(payload.Event.Data.Title)
 
-		return events.APIGatewayProxyResponse{Body: "unknown", StatusCode: 200}, nil
+		if match != nil {
+
+			environment := match[1]
+
+			err = c.SetCustomFieldValues(ctx, payload.Event.Data.ID, helpers.FieldValue{
+				Namespace: "incidents",
+				Name:      "environment",
+				Value:     environment,
+			})
+
+			if err != nil {
+				log.Printf("error in setting environment")
+				return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 500}, nil
+			}
+
+			return events.APIGatewayProxyResponse{
+				Body:       environment,
+				StatusCode: 200,
+			}, nil
+		}
 	}
 
-	environment := match[1]
+	log.Printf("Title did not match any of the configured regex: %s", payload.Event.Data.Title)
 
-	err = c.SetCustomFieldValues(ctx, payload.Event.Data.ID, helpers.FieldValue{
-		Namespace: "incidents",
-		Name:      "environment",
-		Value:     environment,
-	})
-
-	if err != nil {
-		log.Printf("error in setting environment")
-		return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 500}, nil
-	}
-
-	return events.APIGatewayProxyResponse{
-		Body:       environment,
-		StatusCode: 200,
-	}, nil
+	return events.APIGatewayProxyResponse{Body: "unknown pattern", StatusCode: 200}, nil
 }
 
 func main() {

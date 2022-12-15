@@ -9,13 +9,14 @@ import (
 	"log"
 	"os"
 	"regexp"
+	"strings"
 )
 
 func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	token := os.Getenv("PD_API_KEY")
 	c := helpers.Client{Token: token}
 
-	rex := regexp.MustCompile("\\[(\\w+)]$")
+	rex := regexp.MustCompile(os.Getenv("MAP_REGEX"))
 
 	payload := helpers.WebhookEventPayload{}
 
@@ -62,19 +63,14 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 }
 
 func mapEnvironment(environment string) *string {
-	var result string
-	switch environment {
-	case "prod":
-		result = "production"
-		break
-	case "stg":
-		result = "staging"
-		break
-	case "lt":
-		result = "load_test"
-		break
+	mapping := os.Getenv("MAPPING")
+	for _, one := range strings.Split(mapping, ",") {
+		parts := strings.Split(one, "=")
+		if environment == parts[0] {
+			return &parts[1]
+		}
 	}
-	return &result
+	return nil
 }
 
 func main() {
