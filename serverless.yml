@@ -5,13 +5,18 @@ frameworkVersion: '3'
 
 provider:
   name: aws
-  runtime: nodejs14.x
+  runtime: go1.x
   environment:
     PD_API_KEY: ${param:pagerDutyAPIKey}
 
+package:
+  patterns:
+    - '!./**'
+    - ./bin/**
+
 functions:
   extractTitle:
-    handler: handler.extractTitle
+    handler: bin/extractTitle
     events:
       - httpApi:
           path: /
