@@ -12,6 +12,7 @@ params:
 provider:
   name: aws
   runtime: go1.x
+  memorySize: 128
   environment:
     PD_API_KEY: ${param:pagerDutyAPIKey}
     MAP_REGEX: ${param:mapRegex}
