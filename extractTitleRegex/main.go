@@ -17,12 +17,19 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (events
 	token := os.Getenv("PD_API_KEY")
 	c := helpers.Client{Token: token}
 
+	secret := os.Getenv("PD_WEBHOOK_SECRET_REGEX")
+
 	regexes := os.Getenv("EXTRACT_REGEXES")
 	regexSlice := strings.Split(regexes, ",")
 
+	err := helpers.VerifySignature(request.Headers, request.Body, secret)
+	if err != nil {
+		return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 400}, nil
+	}
+
 	payload := helpers.WebhookEventPayload{}
 
-	err := json.Unmarshal([]byte(request.Body), &payload)
+	err = json.Unmarshal([]byte(request.Body), &payload)
 	if err != nil {
 		log.Printf("body could not be unmarshalled")
 		return events.APIGatewayProxyResponse{Body: err.Error(), StatusCode: 404}, nil

@@ -12,4 +12,4 @@ deploy: clean build
 	serverless deploy -s dev --verbose
 
 deployprod: clean build
-	serverless deploy -s prod --verbose --param pagerDutyAPIKey=$(PD_API_KEY_PROD)
+	serverless deploy -s prod --verbose --param pagerDutyAPIKey=$(PD_API_KEY_PROD) --param pagerDutyWebhookSecretMap=$(PD_WEBHOOK_SECRET_MAP) --param pagerDutyWebhookSecretRegex=$(PD_WEBHOOK_SECRET_REGEX)

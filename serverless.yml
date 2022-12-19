@@ -18,6 +18,8 @@ provider:
     MAP_REGEX: ${param:mapRegex}
     MAPPING: ${param:mapping}
     EXTRACT_REGEXES: ${param:extractRegexes}
+    PD_WEBHOOK_SECRET_MAP: ${param:pagerDutyWebhookSecretMap}
+    PD_WEBHOOK_SECRET_REGEX: ${param:pagerDutyWebhookSecretRegex}
 
 package:
   patterns:
