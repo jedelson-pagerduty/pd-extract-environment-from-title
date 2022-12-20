@@ -1,0 +1,15 @@
+name = "pd-extract-environment-from-title"
+main = "src/index.ts"
+compatibility_date = "2022-12-19"
+
+[vars]
+MAP_REGEX = "\\[(\\w+)]$"
+MAPPINGS =  "stg=staging,prod=production,lt=load_test"
+EXTRACT_REGEXES = "in (\\w+) (in|\\[),in (\\w+) from"
+
+[env.dev]
+
+[env.dev.vars]
+MAP_REGEX = "\\[(\\w+)]$"
+MAPPINGS =  "stg=staging,prod=production,lt=load_test"
+EXTRACT_REGEXES = "in (\\w+) (in|\\[),in (\\w+) from"
