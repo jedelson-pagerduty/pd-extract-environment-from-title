@@ -50,7 +50,7 @@ async function handleRegex(request: Request, env: Env): Promise<Response> {
 					value: environment
 				}])
 
-				return new Response('OK')
+				return new Response(environment)
 			}
 		}
 		return new Response('Did not match pattern')
@@ -92,11 +92,10 @@ async function handleMap(request: Request, env: Env): Promise<Response> {
 					name: 'environment',
 					value: mapped
 				}])
+				return new Response(mapped)
 			} else {
-				console.log(`Unmapped value ${environment}`)
+				return new Response(`Unmapped value ${environment}`)
 			}
-
-			return new Response('OK')
 		}
 		return new Response('Did not match pattern')
 
