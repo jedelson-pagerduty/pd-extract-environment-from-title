@@ -10,4 +10,4 @@ REGEXES = "in (\\w+) (in|\\[|from),in (\\w+)$,\\[(\\w+)]$"
 
 [env.dev.vars]
 MAPPINGS =  "stg=staging,prod=production,lt=load_test"
-REGEXES = "in (\\w+) (in|\\[|from),in (\\w+)$,\\[(\\w+)]$"
+REGEXES = "in (\\w+) (in|\\[|from|is),in (\\w+)$,\\[(\\w+)]$"
