@@ -1,13 +1,15 @@
 export class WebhookEventPayload {
-	event: WebhookEvent | undefined
+  event: WebhookEvent | undefined;
 }
 
 export class WebhookEvent {
-	event_type: string | undefined
-	data: WebhookData | undefined
+  event_type: string | undefined;
+
+  data: WebhookData | undefined;
 }
 
 export class WebhookData {
-	id: string | undefined
-	title: string | undefined
+  id: string | undefined;
+
+  title: string | undefined;
 }
