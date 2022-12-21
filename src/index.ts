@@ -1,4 +1,4 @@
-import { setCustomFieldValues } from "./client"
+import { ErrorWrapper, setCustomFieldValues } from "./client"
 import { Env } from "./env"
 import { verifySignature } from "./verifySignature"
 import { WebhookEventPayload } from "./webhook_data"
@@ -48,13 +48,21 @@ async function handle(request: Request, env: Env): Promise<Response> {
 				let environment = match[1]
 				environment = mapEnvironment(environment) || environment
 
-				await setCustomFieldValues(env, payload.event!.data!.id!, [{
+				const setResponse = await setCustomFieldValues(env, payload.event!.data!.id!, [{
 					namespace: 'incidents',
 					name: 'environment',
 					value: environment
 				}])
 
-				return new Response(environment)
+				if (!setResponse.ok) {
+					const error = await setResponse.json<ErrorWrapper>()
+					const errorMsg = (error?.error?.errors && error.error.errors.length > 0) ? error.error.errors.join('; ') : error.error?.message
+					const msg = `could not set environment to ${environment}: ${errorMsg}`
+					console.log(msg)
+					return new Response(msg)
+				} else {
+					return new Response(environment)
+				}
 			}
 		}
 		return new Response('Did not match any pattern')

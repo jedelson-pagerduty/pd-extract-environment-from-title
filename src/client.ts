@@ -6,6 +6,16 @@ class CustomFieldValue {
 	value: any
 }
 
+export class ErrorWrapper {
+	error?: ErrorContent
+}
+
+export class ErrorContent {
+	code?: number
+	message?: string
+	errors?: string[]
+}
+
 export async function setCustomFieldValues(env: Env, incidentId: string, values: CustomFieldValue[]): Promise<Response> {
 	const init: RequestInit<RequestInitCfProperties> = {
 		method: 'PUT',
