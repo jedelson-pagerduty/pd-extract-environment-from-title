@@ -31,18 +31,18 @@ async function handle(request: Request, env: Env, ctx: ExecutionContext): Promis
     }
 
     const incidentId = payload.event.data.id;
-    const serviceId = payload.event.data.service.id;
-    const serviceName = payload.event.data.service.summary;
+    const incidentTitle = payload.event.data.title;
 
     const logDetail: LogEvent = {
       incidentId,
-      serviceId,
-      serviceName,
+      serviceId: payload.event.data.service.id,
+      serviceName: payload.event.data.service.summary,
+      incidentTitle,
     };
 
     const regexes = env.REGEXES.split(',');
 
-    const match = regexes.map((regex) => payload.event!.data!.title!.match(regex)).find((m) => m && m.length > 0);
+    const match = regexes.map((regex) => incidentTitle.match(regex)).find((m) => m && m.length > 0);
 
     if (match) {
       let environment = match[1];

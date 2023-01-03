@@ -11,6 +11,7 @@ export interface LogEvent {
   success?: boolean;
   serviceId: string;
   serviceName: string;
+  incidentTitle: string;
 }
 
 export default {
