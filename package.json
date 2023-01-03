@@ -18,5 +18,8 @@
     "deploy:production": "wrangler publish",
     "lint": "eslint src",
     "lint:fix": "eslint src --fix"
+  },
+  "dependencies": {
+    "@aws-sdk/client-eventbridge": "^3.236.0"
   }
 }

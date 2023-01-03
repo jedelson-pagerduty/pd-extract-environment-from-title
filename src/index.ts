@@ -1,6 +1,7 @@
 import { ErrorWrapper, setCustomFieldValues } from './client';
 import { Env } from './env';
 import verifier from './verifySignature';
+import logger, { LogEvent } from './logger';
 import { WebhookEventPayload } from './webhook_data';
 
 const TYPE = 'incident.triggered';
@@ -13,7 +14,7 @@ function createInvalidError(msg: string): Response {
   });
 }
 
-async function handle(request: Request, env: Env): Promise<Response> {
+async function handle(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const mappings = env.MAPPINGS.split(',').map((m) => m.split('='));
   const mapEnvironment = (s: string): string | undefined => {
     const mapping = mappings.find((m) => m[0] === s);
@@ -29,6 +30,16 @@ async function handle(request: Request, env: Env): Promise<Response> {
       return createInvalidError(`Wrong event type received. Was ${payload.event.event_type}`);
     }
 
+    const incidentId = payload.event.data.id;
+    const serviceId = payload.event.data.service.id;
+    const serviceName = payload.event.data.service.summary;
+
+    const logDetail: LogEvent = {
+      incidentId,
+      serviceId,
+      serviceName,
+    };
+
     const regexes = env.REGEXES.split(',');
 
     const match = regexes.map((regex) => payload.event!.data!.title!.match(regex)).find((m) => m && m.length > 0);
@@ -37,7 +48,9 @@ async function handle(request: Request, env: Env): Promise<Response> {
       let environment = match[1];
       environment = mapEnvironment(environment) || environment;
 
-      const setResponse = await setCustomFieldValues(env, payload.event!.data!.id!, [{
+      logDetail.environment = environment;
+
+      const setResponse = await setCustomFieldValues(env, incidentId, [{
         namespace: 'incidents',
         name: 'environment',
         value: environment,
@@ -45,20 +58,39 @@ async function handle(request: Request, env: Env): Promise<Response> {
 
       if (!setResponse.ok) {
         const error = await setResponse.json<ErrorWrapper>();
+
+        logDetail.error = error;
+
         const errorMsg = (error?.error?.errors && error.error.errors.length > 0) ? error.error.errors.join('; ') : error.error?.message;
         const msg = `could not set environment to ${environment}: ${errorMsg}`;
         console.log(msg);
+
+        logDetail.success = false;
+        ctx.waitUntil(logger.log(env, logDetail));
+
         return new Response(msg);
       }
+
+      logDetail.success = true;
+      ctx.waitUntil(logger.log(env, logDetail));
       return new Response(environment);
     }
+
+    logDetail.success = false;
+    logDetail.error = {
+      error: {
+        code: 404,
+        message: 'did not match any pattern',
+      },
+    };
+    ctx.waitUntil(logger.log(env, logDetail));
     return new Response('Did not match any pattern');
   }
   return createInvalidError('Malformed payload');
 }
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const { method } = request;
     if (method !== 'POST') {
       return createInvalidError(`Unexpected method ${method}`);
@@ -73,6 +105,6 @@ export default {
       return createInvalidError('Signature did not match');
     }
 
-    return handle(request, env);
+    return handle(request, env, ctx);
   },
 };

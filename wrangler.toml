@@ -5,9 +5,15 @@ compatibility_date = "2022-12-19"
 [vars]
 MAPPINGS =  "stg=staging,prod=production,lt=load_test"
 REGEXES = "in (\\w+) (in|\\[|from),in (\\w+)$,\\[(\\w+)]$"
+EVENT_SOURCE = "jedelson-pagerduty.extract-environment-from-title-webhook.production"
+EVENT_BUS_NAME = "arn:aws:events:us-east-1:233597854772:event-bus/extract-environment-from-title-webhook"
+ENABLE_EVENT_LOGGING = "true"
 
 [env.dev]
 
 [env.dev.vars]
 MAPPINGS =  "stg=staging,prod=production,lt=load_test"
 REGEXES = "in (\\w+) (in|\\[|from|is),in (\\w+)$,\\[(\\w+)]$"
+EVENT_SOURCE = "jedelson-pagerduty.extract-environment-from-title-webhook.dev"
+EVENT_BUS_NAME = "arn:aws:events:us-east-1:233597854772:event-bus/extract-environment-from-title-webhook"
+ENABLE_EVENT_LOGGING = "true"

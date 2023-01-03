@@ -1,15 +1,24 @@
+/* eslint-disable max-classes-per-file */
 export class WebhookEventPayload {
   event: WebhookEvent | undefined;
 }
 
 export class WebhookEvent {
-  event_type: string | undefined;
+  event_type!: string;
 
-  data: WebhookData | undefined;
+  data!: WebhookData;
 }
 
 export class WebhookData {
-  id: string | undefined;
+  id!: string;
 
-  title: string | undefined;
+  title!: string;
+
+  service!: ServiceReference;
+}
+
+export class ServiceReference {
+  id!: string;
+
+  summary!: string;
 }
