@@ -1,3 +1,4 @@
+import fetchRetry, { RequestInitWithRetry } from 'fetch-retry';
 import { Env } from './env';
 
 class CustomFieldValue {
@@ -21,7 +22,7 @@ export class ErrorContent {
 }
 
 export async function setCustomFieldValues(env: Env, incidentId: string, values: CustomFieldValue[]): Promise<Response> {
-  const init: RequestInit<RequestInitCfProperties> = {
+  const init: RequestInitWithRetry = {
     method: 'PUT',
     body: JSON.stringify({ field_values: values }),
     headers: {
@@ -30,7 +31,10 @@ export async function setCustomFieldValues(env: Env, incidentId: string, values:
       'X-Early-Access': 'flex-service-early-access',
       Authorization: `Token token=${env.PD_API_KEY}`,
     },
+    retries: 3,
+    retryDelay: 1000,
+    retryOn: [500, 429],
   };
 
-  return fetch(`https://api.pagerduty.com/incidents/${incidentId}/field_values`, init);
+  return fetchRetry(fetch)(`https://api.pagerduty.com/incidents/${incidentId}/field_values`, init);
 }
