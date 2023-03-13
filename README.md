@@ -8,7 +8,7 @@ This repository contains a webhook, implemented using [CloudFlare Workers](https
 2. Create a read-write PagerDuty [REST API Key](https://support.pagerduty.com/docs/api-access-keys).
 3. Create a webhook with the expected URL of the webhook. Make note of the generated secret.
 4. Deploy the worker by running `npm run deploy:production`
-5. Use wrangler to set these three secrets:
+5. Use wrangler to set these two secrets:
 
 * `PD_API_KEY` - The REST API Key
 * `PD_WEBHOOK_SECRET` - The secret for the webhook
@@ -32,3 +32,13 @@ Once done, `wrangler secret list` should show the following:
   }
 ]
 ```
+
+## Logging Setup
+
+This webhook can optionally emit events to AWS EventBridge and have those events routed to AWS CloudWatch. To activate this:
+
+1. Copy `terraform.tfvars.sample` to `terraform.tfvars` and edit as necessary.
+2. Run `terraform plan` and `terraform apply`
+3. Run `setup-logging-variables-prod.sh` to create the relevant secrets in Cloudflare Workers.
+
+This will create a Log Group named `/aws/events/extract-environment-from-title-webhook.prod` (unless you've changed the `event_source` variable name)

@@ -1,0 +1,2 @@
+event_source = "extract-environment-from-title-webhook"
+aws_region   = "us-east-2"

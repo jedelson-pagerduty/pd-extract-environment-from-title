@@ -2,8 +2,6 @@ import { EventBridgeClient, PutEventsCommand } from '@aws-sdk/client-eventbridge
 import { ErrorWrapper } from './client';
 import { Env } from './env';
 
-const REGION = 'us-east-1';
-
 export interface LogEvent {
   incidentId: string;
   error?: ErrorWrapper;
@@ -34,7 +32,7 @@ export default {
 
     try {
       const ebClient = new EventBridgeClient({
-        region: REGION,
+        region: env.AWS_REGION,
         credentials: {
           accessKeyId: env.AWS_ACCESS_KEY_ID,
           secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
