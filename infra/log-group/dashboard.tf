@@ -46,7 +46,7 @@ resource "aws_cloudwatch_dashboard" "events" {
       },
       {
         height = 5
-        width  = 10
+        width  = 8
         y      = 8
         x      = 7
         type   = "log"
@@ -94,7 +94,7 @@ resource "aws_cloudwatch_dashboard" "events" {
       },
       {
         height = 1
-        width  = 10
+        width  = 8
         y      = 7
         x      = 7
         type   = "text"
@@ -124,9 +124,9 @@ resource "aws_cloudwatch_dashboard" "events" {
       },
       {
         height = 5
-        width  = 7
+        width  = 9
         y      = 8
-        x      = 17
+        x      = 15
         type   = "log"
         properties = {
           query   = "SOURCE '${local.event_log_group_name}' | filter detail.success == 1\n| stats count(*) by detail.environment"
@@ -138,9 +138,9 @@ resource "aws_cloudwatch_dashboard" "events" {
       },
       {
         height = 1
-        width  = 7
+        width  = 9
         y      = 7
-        x      = 17
+        x      = 15
         type   = "text"
         properties = {
           markdown = "# Successes by Environment"
