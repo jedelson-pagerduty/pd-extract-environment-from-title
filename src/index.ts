@@ -45,7 +45,7 @@ async function handle(request: Request, env: Env, ctx: ExecutionContext): Promis
     const match = regexes.map((regex) => incidentTitle.match(regex)).find((m) => m && m.length > 0);
 
     if (match) {
-      let environment = match[1];
+      let environment = match[1].toLowerCase();
       environment = mapEnvironment(environment) || environment;
 
       logDetail.environment = environment;
