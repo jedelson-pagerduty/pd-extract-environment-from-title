@@ -2,8 +2,6 @@ import fetchRetry, { RequestInitWithRetry } from 'fetch-retry';
 import { Env } from './env';
 
 class CustomFieldValue {
-  namespace!: string;
-
   name!: string;
 
   value: any;
@@ -24,7 +22,7 @@ export class ErrorContent {
 export async function setCustomFieldValues(env: Env, incidentId: string, values: CustomFieldValue[]): Promise<Response> {
   const init: RequestInitWithRetry = {
     method: 'PUT',
-    body: JSON.stringify({ field_values: values }),
+    body: JSON.stringify({ custom_fields: values }),
     headers: {
       Accept: 'application/vnd.pagerduty+json;version=2',
       'Content-Type': 'application/json',
@@ -36,5 +34,5 @@ export async function setCustomFieldValues(env: Env, incidentId: string, values:
     retryOn: [500, 429],
   };
 
-  return fetchRetry(fetch)(`https://api.pagerduty.com/incidents/${incidentId}/field_values`, init);
+  return fetchRetry(fetch)(`https://api.pagerduty.com/incidents/${incidentId}/custom_fields/values`, init);
 }
