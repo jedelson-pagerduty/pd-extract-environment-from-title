@@ -14,8 +14,6 @@ export class WebhookData {
 
   title!: string;
 
-  self!: string;
-
   service!: ServiceReference;
 }
 
