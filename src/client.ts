@@ -19,7 +19,7 @@ export class ErrorContent {
   errors?: string[];
 }
 
-export async function setCustomFieldValues(env: Env, incidentId: string, values: CustomFieldValue[]): Promise<Response> {
+export async function setCustomFieldValues(env: Env, self: string, values: CustomFieldValue[]): Promise<Response> {
   const init: RequestInitWithRetry = {
     method: 'PUT',
     body: JSON.stringify({ custom_fields: values }),
@@ -34,5 +34,5 @@ export async function setCustomFieldValues(env: Env, incidentId: string, values:
     retryOn: [500, 429],
   };
 
-  return fetchRetry(fetch)(`https://api.pagerduty.com/incidents/${incidentId}/custom_fields/values`, init);
+  return fetchRetry(fetch)(`${self}/custom_fields/values`, init);
 }

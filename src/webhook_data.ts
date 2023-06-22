@@ -12,6 +12,8 @@ export class WebhookEvent {
 export class WebhookData {
   id!: string;
 
+  self!: string;
+
   title!: string;
 
   service!: ServiceReference;

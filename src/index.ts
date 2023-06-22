@@ -52,7 +52,7 @@ async function handle(request: Request, env: Env, ctx: ExecutionContext): Promis
 
       console.log(`Attempting to set environment for ${incidentId} to ${environment}`);
 
-      const setResponse = await setCustomFieldValues(env, incidentId, [{
+      const setResponse = await setCustomFieldValues(env, payload.event.data.self, [{
         name: 'environment',
         value: environment,
       }]);
