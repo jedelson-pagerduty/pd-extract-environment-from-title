@@ -27,3 +27,4 @@ node_modules/**
 .terraform
 terraform.tfvars
 terraform.tfstate*
+.dev.vars

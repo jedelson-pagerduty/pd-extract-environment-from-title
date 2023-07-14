@@ -13,6 +13,7 @@
   },
   "private": true,
   "scripts": {
+    "build": "wrangler publish --dry-run",
     "start": "wrangler dev",
     "deploy:dev": "wrangler publish --env dev",
     "deploy:production": "wrangler publish",
