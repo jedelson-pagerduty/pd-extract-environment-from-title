@@ -4,6 +4,7 @@ import verifier from './verifySignature';
 import logger, { LogEvent } from './logger';
 import { WebhookEventPayload } from './webhook_data';
 
+const TEST_TYPE = 'pagey.ping';
 const TYPE = 'incident.triggered';
 
 function createInvalidError(msg: string): Response {
@@ -25,6 +26,12 @@ async function handle(request: Request, env: Env, ctx: ExecutionContext): Promis
   };
 
   const payload = await request.json<WebhookEventPayload>();
+  if (payload.event && payload.event.event_type === TEST_TYPE) {
+    return new Response(null, {
+      status: 200,
+    });
+  }
+
   if (payload.event && payload.event.data && payload.event.data.id && payload.event.data.title) {
     if (payload.event.event_type !== TYPE) {
       return createInvalidError(`Wrong event type received. Was ${payload.event.event_type}`);
