@@ -21,7 +21,7 @@
     "lint:fix": "eslint src --fix"
   },
   "dependencies": {
-    "@aws-sdk/client-eventbridge": "^3.236.0",
+    "@aws-sdk/client-eventbridge": "^3.370.0",
     "fetch-retry": "^5.0.6"
   }
 }
