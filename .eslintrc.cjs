@@ -1,15 +1,19 @@
 module.exports = {
   extends: [
-    'airbnb-base',
-    'airbnb-typescript/base'],
-  parser: '@typescript-eslint/parser',
+    "airbnb-base",
+    "airbnb-typescript/base",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:unicorn/recommended",
+    "prettier",
+  ],
+  parser: "@typescript-eslint/parser",
   parserOptions: {
-       project: './tsconfig.json'
+    project: "./tsconfig.json",
   },
+  plugins: ["@typescript-eslint", "unicorn"],
   root: true,
   rules: {
     "max-classes-per-file": ["error", 3],
     "no-console": "off",
-    "max-len": ["error", 150],
-  }
-}
+  },
+};
