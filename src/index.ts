@@ -2,7 +2,7 @@ import { ErrorWrapper, setCustomFieldValues } from "./client";
 import { Environment } from "./environment";
 import logger, { LogEvent } from "./logger";
 import verifier from "./verify-signature";
-import { WebhookEventPayload } from "./webhook_data";
+import { WebhookEventPayload } from "./webhook-data";
 
 const TEST_TYPE = "pagey.ping";
 const TYPE = "incident.triggered";
